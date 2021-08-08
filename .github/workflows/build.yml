@@ -1,0 +1,23 @@
+name: Build
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ 'win-x64', 'win-x86', 'win-arm', 'win-arm64', 'linux-x64', 'linux-musl-x64', 'linux-arm', 'linux-arm64', 'osx-x64']
+    name: Build for ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+      - run: |
+          dotnet publish -c Release -r ${{ matrix.os }}
+          cp obj/Release/net5.0/${{ matrix.os }}/linked/GBX.NET.LZO.dll bin/Release/net5.0/${{ matrix.os}}/publish
+          cp LICENSE.md bin/Release/net5.0/${{ matrix.os}}/publish
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: tm-ghost-tool-${{ matrix.os }}
+          path: bin/Release/net5.0/${{ matrix.os}}/publish

@@ -2,6 +2,7 @@
 using System.IO;
 using GBX.NET;
 using GBX.NET.Engines.Game;
+using GBX.NET.LZO;
 
 namespace tm_ghost_tool
 {
